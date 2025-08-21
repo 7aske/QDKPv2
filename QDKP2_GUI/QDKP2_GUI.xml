@@ -2332,7 +2332,7 @@
         </FontString>
 
         <FontString name="$parent_net" inherits="GameFontHighlightSmall" justifyH="CENTER" text="QDKP2_LOC_Net">
-          <Size><AbsDimension x="40" y="14"/></Size>
+          <Size><AbsDimension x="50" y="14"/></Size>
           <Anchors><Anchor point="TOPLEFT" relativeTo="$parent_date" relativePoint="TOPRIGHT"/></Anchors>
         </FontString>
 

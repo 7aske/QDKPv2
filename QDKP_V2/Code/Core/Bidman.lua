@@ -232,6 +232,10 @@ function QDKP2_BidM_BidWatcher(txt,player,channel)
           return false
         end
         local oldBet=QDKP2_BidM.LIST[player]
+        local highestBet=nil
+        for _, bet in pairs(QDKP2_BidM.LIST) do
+          if bet.value and (not highestBet or bet.value>highestBet.value) then highestBet=bet; end
+        end
         if QDKP2_BidM_AllowMultipleBid  or not (oldBet and oldBet.txt) then
           local _,_,bid=string.find(txt,"([0-9]+)")
           if not oldBet then oldBet={}; end
@@ -255,6 +259,18 @@ function QDKP2_BidM_BidWatcher(txt,player,channel)
             QDKP2_BidM_SendMessage(player,"NOBID",channel,QDKP2_LOC_NoEligible)
             return false
           end
+
+          DEFAULT_CHAT_FRAME:AddMessage("Bid value: "..tostring(newBet.value)..", minbid: "..tostring(newBet.minBid)..", maxbid: "..tostring(newBet.maxBid)..", dkp: "..tostring(newBet.dkp))
+          if newBet.value and highestBet then
+            if highestBet.value and newBet.value < highestBet.value and not QDKP2_BidM_AllowLesserBid then
+              QDKP2_BidM_SendMessage(player,"NOBID",channel, QDKP2_LOC_BidLessTotal)
+              return false
+            elseif highestBet.value and newBet.value == highestBet.value and not QDKP2_BidM_AllowEqualBid then
+              QDKP2_BidM_SendMessage(player,"NOBID",channel,QDKP2_LOC_BidEqualTotal)
+              return false
+            end
+          end
+
           if newBet.value and oldValue then
             if oldValue==newBet.value then    --is it the same bid as the previous?
               QDKP2_BidM_SendMessage(player,"NOBID",channel,QDKP2_LOC_BidEqual)

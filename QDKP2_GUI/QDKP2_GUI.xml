@@ -1474,6 +1474,41 @@
       </CheckButton>
   -->
 
+      <EditBox name="QDKP2_Frame2_SearchBox" inherits="InputBoxTemplate">
+        <Size>
+          <AbsDimension x="150" y="20"/>
+        </Size>
+        <Anchors>
+          <Anchor point="BOTTOMRIGHT">
+            <Offset>
+              <AbsDimension x="-15" y="18"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            this:SetAutoFocus(false);
+            this:SetText(QDKP2_LOC_GUISEARCH or "Search...");
+          </OnLoad>
+          <OnEditFocusGained>
+            if this:GetText() == (QDKP2_LOC_GUISEARCH or "Search...") then
+              this:SetText("");
+            end
+          </OnEditFocusGained>
+          <OnEditFocusLost>
+            if this:GetText() == "" then
+              this:SetText(QDKP2_LOC_GUISEARCH or "Search...");
+            end
+          </OnEditFocusLost>
+          <OnTextChanged>
+            QDKP2GUI_Roster:FilterBySearch();
+          </OnTextChanged>
+          <OnEnterPressed>
+            this:ClearFocus();
+          </OnEnterPressed>
+        </Scripts>
+      </EditBox>
+
       <EditBox name="QDKP2_Frame2_Bid_Item" inherits="InputBoxTemplate">
         <Size>
           <AbsDimension x="150" y="25"/>

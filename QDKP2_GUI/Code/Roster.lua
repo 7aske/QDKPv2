@@ -20,6 +20,7 @@ myClass.EntryName="QDKP2_frame2_entry"
 myClass.Sort={}
 myClass.Sort.Order="Alpha"
 myClass.Sort.LastLen=0
+myClass.SearchFilter=""
 
 myClass.PlayersColor={}
 myClass.PlayersColor.Default={r=1,g=1,b=1}
@@ -293,7 +294,31 @@ function myClass.PupulateList(self)
       end
     end
   end
+  self:ApplySearchFilter()
   QDKP2_Debug(2, "GUI-Roster","List populated. Voices="..tostring(#self.List))
+end
+
+function myClass.ApplySearchFilter(self)
+  local filter = myClass.SearchFilter
+  if not filter or filter == "" or filter == (QDKP2_LOC_GUISEARCH or "Search...") then
+    return
+  end
+  filter = string.lower(filter)
+  local filteredList = {}
+  for i, name in pairs(self.List) do
+    local nameLower = string.lower(name)
+    if string.find(nameLower, filter) then
+      table.insert(filteredList, name)
+    end
+  end
+  self.List = filteredList
+end
+
+function myClass.FilterBySearch(self)
+  local searchBox = QDKP2_Frame2_SearchBox
+  local searchText = searchBox:GetText()
+  myClass.SearchFilter = searchText
+  self:Refresh(true)
 end
 
 
@@ -399,6 +424,10 @@ end
 function myClass.ChangeList(self,Type)
   QDKP2_Debug(2, "GUI-Roster","Changing view to "..tostring(Type))
   self.Sel=Type
+  myClass.SearchFilter=""
+  if QDKP2_Frame2_SearchBox then
+    QDKP2_Frame2_SearchBox:SetText(QDKP2_LOC_GUISEARCH or "Search...")
+  end
   myClass:PupulateList()
   local list={}
   for i,v in pairs(self.List) do
